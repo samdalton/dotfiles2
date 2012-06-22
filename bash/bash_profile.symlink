@@ -1,0 +1,48 @@
+export PATH="/usr/local/mysql/bin:/usr/local/bin:${PATH}"
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib/
+umask 002
+
+
+# git aliases
+alias gs="git status"
+alias gl="git l"
+alias gd="git diff"
+
+# misc aliases
+alias ll="ls -la"
+alias copyfromtmux="tmux saveb -|pbcopy && tmux deleteb"
+alias remapcapslock="/Applications/Sikuli-IDE.app/sikuli-ide.sh -r $HOME/Development/set_capslock_to_control.sikuli"
+
+# fix term when sshing
+alias ssh='TERM=xterm ssh -o SendEnv=TERM'
+
+# gimme colors
+export CLICOLOR=true
+export LSCOLORS="exfxcxdxbxegedabagacad"
+
+# show git brach in prompt
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
+}
+export PS1="\w\[\e[0;32;49m\]\$(parse_git_branch)\[\e[0;0m\]: "
+
+# rvm
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+export QUID_UNIFIED=$HOME/Development/unified
+export QUID_ANALYSIS=$HOME/Development/analysis
+export QUID_TOOLS=$HOME/Development/tools
+export QUID_GOAT=$HOME/Development/goat
+export PYTHONPATH=$QUID_ANALYSIS/lib/pypath:$QUID_TOOLS/lib/pypath:$QUID_GOAT
+export QUID_ANALYSIS_ENV=development
+export QUID_ANALYSIS_CONF=$QUID_ANALYSIS/config
+export CELERY_CONFIG_MODULE=quid_analysis.celeryconfig
+#export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH
+#export PATH=/lol/bin:/lol/sbin:$QUID_TOOLS/bin:/usr/local/mysql/bin:$PATH
+
+export PATH="$QUID_TOOLS/bin:${PATH}"
+
+# Setting PATH for Python 2.7
+# The orginal version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
