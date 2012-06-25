@@ -94,7 +94,7 @@ set showmatch  " Show matching brackets.
 set mat=5  " Bracket blinking. 
 
 set novisualbell  " No blinking . 
-set noerrorbells  " No noise. 
+set noerrorbells t_vb=  " No noise. 
 set laststatus=2  " Always show status line. 
 
 nnoremap j gj

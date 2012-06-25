@@ -1,5 +1,9 @@
 umask 002
 
+# source bashrc if exists
+if [ -f ~/.bashrc ] ; then 
+    source ~/.bashrc
+fi
 
 # git aliases
 alias gs="git status"
