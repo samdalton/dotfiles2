@@ -11,8 +11,6 @@ let mapleader=','
 " let g:miniBufExplMapCTabSwitchBufs = 1
 " let g:miniBufExplModSelTarget = 1
 
-let g:CommandTMaxHeight = 20
-
 " alt+n or alt+p to navigate between entries in QuickFix
 "map <silent> <m-p> :cp <cr>
 "map <silent> <m-n> :cn <cr>
@@ -116,7 +114,7 @@ nnoremap <leader>nt :NERDTreeToggle<CR>
 nnoremap gn :NERDTreeToggle<CR>
 nnoremap <leader>w :set wrap<CR>
 nnoremap <leader>nw :set nowrap<CR>
-nnoremap <leader>t :CommandT<CR>
+nnoremap <leader>t :CtrlP<CR>
 nnoremap <leader>. :set autochdir<CR>:pwd <CR>
 nnoremap <leader>/ :set noautochdir<CR>:pwd <CR>
 nnoremap <leader>r :%s/
@@ -124,7 +122,6 @@ nnoremap <leader>n  <C-w>s<C-w>l :enew<CR>
 
 "Keymappings
 ":map <Leader>f :FuzzyFinderFileWithFullCwd<CR>
-:map <Leader>f :CommandTFlush<CR>
 :nmap H 0
 :nmap L $
 
