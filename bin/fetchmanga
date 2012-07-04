@@ -1,0 +1,256 @@
+#!/usr/bin/ruby
+
+# This was written by some kid who ran away
+
+require 'rubygems'
+require 'zip/zip'
+require 'zip/zipfilesystem'
+require 'optparse' 
+require 'hpricot'
+require 'URI'
+require 'net/http'
+
+class MangaSource
+  @host
+  attr_reader :host
+  def list_manga() raise "list_manga must be implemented"; end
+  def get_pages(chapter) raise "get_pages(chapter) must be implemented"; end
+  def get_image_location(chapter, page) raise "get_image_location(chapter, page) must be implemented"; end
+  def get_image_data(url)
+    uri = URI.parse(url)
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      resp = http.get("#{uri.path}?#{uri.query}")
+      if resp.code == "200"
+        return resp.body
+      end
+    end
+  end
+end
+
+class MangaReaderDotNet < MangaSource
+  
+  def initialize()
+    @host = "www.mangareader.net"
+  end
+  
+  def list_manga
+    manga = []
+    Net::HTTP.start(@host) do |http|
+      resp = http.get "/alphabetical"
+      doc = Hpricot(resp.body)
+      manga = (doc/"ul.series_alpha > li > a")
+    end
+    manga.each_with_index do |m,n|
+      puts "#{n+1}: #{m.html()}"
+    end
+  end
+  
+  def get_pages(chapter)
+    Net::HTTP.start(@host) do |http|
+      resp = http.get "/#{chapter.manga.directory}/#{chapter.number}"
+      if resp.code == "200"
+        doc = Hpricot(resp.body)
+        return (doc/"#pageMenu option").map do |n| n.attributes["value"] end
+      end
+    end
+  end
+  
+  def get_image_location(chapter, page)
+    Net::HTTP.start(@host) do |http|
+      resp = http.get(page)
+      if resp.code == "200"
+        doc = Hpricot(resp.body)
+        return (doc/"#img").attr("src")
+      end
+    end
+  end
+
+end
+
+
+class Manga
+  @name
+  @directory
+  @source
+  attr_reader :name, :directory, :source
+  
+  def initialize(name, source)
+    @name = name
+    @directory = name.gsub(/ /,"_")
+    @source = source
+  end
+  
+  def to_s
+    @name
+  end
+end
+
+class Chapter
+  @manga
+  @number
+  @zipfile
+  @added
+  
+  attr_reader :manga, :number, :zipfile, :added
+  attr_writer :added
+  
+  def initialize(manga, number)
+    @added = 0
+    @manga = manga
+    @number = number
+    @zipfile = manga.directory.downcase+number.to_s.rjust(3,"0")+".cbz"
+  end
+  
+  def to_s
+    @number.to_s
+  end
+  
+  def get_first_page
+    return 1
+  end
+  
+  def get_pages()
+    @manga.source.get_pages(self)
+  end
+  
+  def get_image_location(page)
+    @manga.source.get_image_location(self, page)
+  end
+  
+  def delete_zipfile
+    File.delete(@zipfile)
+  end
+  
+  def add_to_zipfile(data, newname)
+    Zip::ZipFile.open(@zipfile, Zip::ZipFile::CREATE) do |zf|
+      zf.get_output_stream(newname) { |f| f.write(data) }
+    end
+    @added = @added+1
+  end
+end
+
+if __FILE__ == $0
+
+  $quiet = false
+  $verbose = false
+  $exit_status = 0
+
+  def putsf str # print and flush
+    print str
+    STDOUT.flush
+  end
+
+  def output_usage
+    puts "usage: fetchmanga [-lvhVq] MANGA_NAME CHAPTER ..."
+  end
+
+  def output_help
+    output_usage
+    puts "example: fetchmanga naruto 1 2 3"
+    puts "  --list, -l       list all available manga"
+    puts "  --$quiet, -q     suppress output"
+    puts "  --$verbose, -V   print additional information"
+    puts "  --help, -h       show help"
+    puts "  --version, -v    display version information"
+    puts ""
+    puts "Note: If the manga name contains whitespace characters, you must surround the name in \"double quotes\"."
+  end
+
+  def output_version
+    puts "Fetchmanga - manga download tool"
+    puts "(c) 2009-2011 Joseph Maxwell Hobbs"
+    puts "Version 0.4"
+  end
+  
+  source =  MangaReaderDotNet.new
+
+  opts = OptionParser.new 
+  opts.on('-l', '--list')    { source.list_manga ; exit 0 }
+  opts.on('-v', '--version')    { output_version ; exit 0 }
+  opts.on('-h', '--help')       { output_help ; exit 0}
+  opts.on('-V', '--verbose')    { $verbose = true }  
+  opts.on('-q', '--quiet')      { $quiet = true }            
+  opts.parse!(ARGV)
+
+  begin output_help; exit 0 end unless ARGV.length > 0
+  manga_input = ARGV.shift.strip
+  manga_input = Dir.pwd.gsub(/^.*\//,'') if manga_input == '.'
+  begin output_help; exit 0 end unless manga_input
+  manga = Manga.new(manga_input, source)
+
+  chapter_inputs = ARGV.clone ; ARGV.clear
+  begin output_help; exit 0 end if chapter_inputs.empty?
+
+  chapters = []
+  chapter_inputs.each do |n|
+    if n=~/(\d+)(-|\.\.+)(\d+)/
+      a = $~[1].to_i
+      b = $~[3].to_i+1
+      (b-a).times do |i| chapters.push(a+i) end
+    elsif n=~/^\d+(\.\d+)?$/
+      chapters.push(n)
+    else
+      puts "Not sure what you mean by #{n}"
+    end
+  end
+
+  chapters.each do |n|
+    chapter = Chapter.new(manga, n)
+  
+    if File.exists?(chapter.zipfile)
+      putsf "Chapter #{chapter} already exists. Would you like to replace it? "
+      if gets =~ /^y/ then File.delete(chapter.zipfile)  else next end
+    end
+
+
+    putsf "Downloading #{manga} - chapter #{chapter}" unless $quiet
+    puts ":" if $verbose
+  
+    putsf "  Gathering list of pages... " if $verbose
+    pages = chapter.get_pages()
+    if pages
+      puts "done (#{pages.length} pages)." if $verbose
+    else
+      if $verbose then puts "failed." else puts "" end
+      puts "Error: Could not gather page list."
+      $exit_status = 1
+      next
+    end
+
+    pages.each_with_index do |p,i|
+    
+      putsf "  Locating page #{p}... " if $verbose
+      img = chapter.get_image_location(p)
+      if img
+        puts "done (#{img})." if $verbose
+      else
+        puts "failed." if $verbose
+        puts "Could not locate image for page #{p}"
+        $exit_status = 1
+        next
+      end
+      
+      newfilename = "#{i.to_s.rjust(3,"0")}.jpg"
+      putsf "  Saving page #{p} as #{newfilename}... " if $verbose
+      startTime = Time.now
+      imgdata = source.get_image_data(img)
+      elapsedTime = Time.now - startTime
+      if imgdata
+        chapter.add_to_zipfile(imgdata, newfilename)
+        putsf "." unless $quiet or $verbose
+        puts "done (#{imgdata.size/1024.0} kB - #{elapsedTime.round} secs)." if $verbose
+      else
+        puts "failed." if $verbose
+        puts "Error: Unable to download image for page #{p}."
+        $exit_status = 1
+      end
+    end
+  
+    puts " done." unless $quiet or $verbose
+    puts "#{chapter.added} pages saved to #{Dir.pwd}/#{chapter.zipfile}" unless $quiet or chapter.added == 0
+    puts "Could not download chapter #{chapter}" unless $quiet or chapter.added > 0
+  end
+
+  exit($exit_status)
+  
+end

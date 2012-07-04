@@ -1,0 +1,101 @@
+#!/bin/bash
+
+usage() {
+    cat << EOF
+usage: readmanga [-h] MANGA_NAME [CHAPTER]
+example: readmanga naruto 5
+
+This script opens a given chapter of a given manga.
+If no chapter is given, it will use the most recent chapter you have read.
+
+OPTIONS:
+   -h      Show this message
+EOF
+}
+
+getfile() {
+    export fileName=`ruby -e "puts '$folder/' + '$manga'.gsub(/ /,'_') + '$1'.rjust(3,'0') + '.cbz'"`
+}
+
+while getopts “h” OPTION ; do
+    case $OPTION in
+        h ) usage
+            exit 0;;
+        \? ) usage
+            exit 1;;
+        * ) usage
+            exit 1;;
+    esac
+done
+
+if [[ ! $1 ]] ; then 
+    usage
+    exit 1
+fi
+
+manga=`ruby -e "puts '$1'=='.'?Dir.pwd.sub(/^.*\//,''):'$1'"`
+mangafolder="$HOME/Documents/Manga"
+folder=`ruby -e "puts '$mangafolder/'+('$manga'.split(' ').each do |s| s.capitalize end).join(' ')"`
+
+if [[ $2 ]] ; then 
+    currentChapter=$2
+else 
+    currentChapter=`python << EOF
+import shelve, os
+data = shelve.open('%s%s.readmangadetails' % (os.getenv('HOME'), os.sep) )
+key = '$manga'.lower()
+print data[key] if (key in data) else 0
+data.close()
+EOF`
+fi
+
+while true ; do
+    getfile $currentChapter
+    nextChapter=$(($currentChapter + 1))
+    halt=false
+
+    if [[ -a "$fileName"  ]]; then
+        python << EOF
+import shelve, os
+data = shelve.open('%s%s.readmangadetails' % (os.getenv('HOME'), os.sep) )
+data['$manga'.lower()] = $currentChapter
+data.close()
+EOF
+        echo "Reading chapter $currentChapter"
+        open "$fileName"
+    else
+        echo "Chapter $currentChapter does not exist. ($fileName)"
+        halt=true
+    fi 
+
+    getfile $nextChapter
+
+    if [[ ! -a $fileName ]]; then
+        echo -n "Fetch chapter $nextChapter? (y/n) "
+        read
+        if [[ $REPLY == "y" ]]; then
+            thisdir=$PWD
+            cd "$mangafolder/$manga"
+            fetchmanga $manga $nextChapter || halt=true
+            cd $thisdir
+        else
+            halt=true
+        fi
+    fi
+
+    if [[ -a "$fileName" ]]; then
+        echo -n "Read chapter $nextChapter? (y/n) "
+        read
+        if [[ $REPLY == "y" ]]; then
+            currentChapter=$nextChapter
+            continue
+        else
+            halt=true
+        fi
+    fi
+
+    if $halt; then
+        echo "Exiting."
+        break
+    fi
+done

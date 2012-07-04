@@ -1,21 +1,20 @@
-umask 002
-
 # source bashrc if exists
 if [ -f ~/.bashrc ] ; then 
     source ~/.bashrc
 fi
 
-# git aliases
-alias gs="git status"
-alias gl="git l"
-alias gd="git diff"
+# set vim to default editor
+export EDITOR='vim'
+
+# set file/folder default permissions to rxwrxwr-x
+umask 002
 
 # misc aliases
 alias ll="ls -la"
 alias copyfromtmux="tmux saveb -|pbcopy && tmux deleteb"
 alias remapcapslock="/Applications/Sikuli-IDE.app/sikuli-ide.sh -r $HOME/Development/set_capslock_to_control.sikuli"
 
-# fix term when sshing
+# fix term when sshing from within tmux
 alias ssh='TERM=xterm ssh -o SendEnv=TERM'
 
 # gimme colors
@@ -28,23 +27,13 @@ parse_git_branch() {
 }
 export PS1="\w\[\e[0;32;49m\]\$(parse_git_branch)\[\e[0;0m\]: "
 
-# rvm
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# add dotfiles repo's scripts to path
+export PATH="$HOME/.dotfiles/bin":$PATH
+
+# standard rvm initializer
+export PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-export QUID_UNIFIED=$HOME/Development/unified
-export QUID_ANALYSIS=$HOME/Development/analysis
-export QUID_TOOLS=$HOME/Development/tools
-export QUID_GOAT=$HOME/Development/goat
-export PYTHONPATH=$QUID_ANALYSIS/lib/pypath:$QUID_TOOLS/lib/pypath:$QUID_GOAT
-export QUID_ANALYSIS_ENV=development
-export QUID_ANALYSIS_CONF=$QUID_ANALYSIS/config
-export CELERY_CONFIG_MODULE=quid_analysis.celeryconfig
-#export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH
-#export PATH=/lol/bin:/lol/sbin:$QUID_TOOLS/bin:/usr/local/mysql/bin:$PATH
+# goodbye
+alias l8rz=exit
 
-export PATH="$HOME/.dotfiles/bin:$QUID_TOOLS/bin:${PATH}"
-
-# Setting PATH for Python 2.7
-# The orginal version is saved in .bash_profile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
