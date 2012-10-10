@@ -13,6 +13,10 @@ umask 002
 alias ll="ls -la"
 alias copyfromtmux="tmux saveb -|pbcopy && tmux deleteb"
 alias remapcapslock="/Applications/Sikuli-IDE.app/sikuli-ide.sh -r $HOME/Development/set_capslock_to_control.sikuli"
+alias curl="curl -w \"\n\n------\n\nResponse code: %{http_code}\n\n\""
+alias curlt="curl -w \"\n\n-----------\n\ntime_namelookup:  %{time_namelookup}\ntime_connect:  %{time_connect}\ntime_appconnect:  %{time_appconnect}\ntime_pretransfer:  %{time_pretransfer}\ntime_redirect:  %{time_redirect}\ntime_starttransfer:  %{time_starttransfer}\n----------\ntime_total:  %{time_total}\n\n\""
+
+alias spritify="montage -background none  -geometry +1+1 -tile 8x"
 
 # fix term when sshing from within tmux
 alias ssh='TERM=xterm ssh -o SendEnv=TERM'

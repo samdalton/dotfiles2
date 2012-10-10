@@ -40,7 +40,7 @@ set nocp incsearch
 set gdefault " global replacement
 set cinoptions=:0,p0,t0 
 set cinwords=if,else,while,do,for,switch,case 
-set formatoptions=tcqr 
+set formatoptions=cqr 
 
 "Search
 set ignorecase
@@ -172,4 +172,14 @@ nnoremap <F5> :call ToggleBackground()<CR>
 inoremap <F5> <ESC>:call ToggleBackground()<CR>a
 vnoremap <F5> <ESC>:call ToggleBackground()<CR>v
 
-:match ErrorMsg '\%>80v.\+'
+let g:acp_enableAtStartup = 0
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_enable_auto_select = 1
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+
+augroup vimrc_autocmds
+  "autocmd BufEnter * highlight OverLength ctermbg=red guibg=#292939
+  autocmd BufEnter * match ErrorMsg '\%>80v.\+'
+augroup END
