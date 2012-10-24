@@ -172,14 +172,19 @@ nnoremap <F5> :call ToggleBackground()<CR>
 inoremap <F5> <ESC>:call ToggleBackground()<CR>a
 vnoremap <F5> <ESC>:call ToggleBackground()<CR>v
 
-let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_enable_auto_select = 1
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+"let g:acp_enableAtStartup = 0
+"let g:neocomplcache_enable_at_startup = 1
+"let g:neocomplcache_enable_smart_case = 1
+"let g:neocomplcache_enable_auto_select = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
 
 augroup vimrc_autocmds
   "autocmd BufEnter * highlight OverLength ctermbg=red guibg=#292939
   autocmd BufEnter * match ErrorMsg '\%>80v.\+'
 augroup END
+
+
+let g:vimclojure#HighlightBuildtins = 1
+let g:vimclojure#ParenRainbow = 1
+let vimclojure#WantNailgun = 1
