@@ -11,12 +11,15 @@ if [ ! -f $VIMCLOJURE_SERVER_JAR ]; then
     exit 1
 fi
  
-LEIN_CLASSPATH=$(lein classpath)
+TMP_FILE="/tmp/ng-lein-classpath.$$"
+lein -o classpath $TMP_FILE 
+LEIN_CLASSPATH=`cat $TMP_FILE`
+rm $TMP_FILE
  
 if [ ! $LEIN_CLASSPATH ]; then
     echo "Warning! Unable to get classpath from lein, just using existing classpath, expecting clojure jars to be available"
 fi
  
 NG_CLASSPATH="$VIMCLOJURE_SERVER_JAR:$LEIN_CLASSPATH:$CLASSPATH"
-echo java -server -cp "$NG_CLASSPATH" vimclojure.nailgun.NGServer
+#echo java -server -cp "$NG_CLASSPATH" vimclojure.nailgun.NGServer
 java -server -cp "$NG_CLASSPATH" vimclojure.nailgun.NGServer
