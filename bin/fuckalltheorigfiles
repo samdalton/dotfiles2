@@ -1,0 +1,20 @@
+#!/bin/bash
+
+suffix=${1:-orig}
+have_files=`find . -name "*.${suffix}" | wc -l`
+
+if [ $have_files -eq 0 ]; then
+    echo "No .$suffix files found."
+else
+    echo "Delete all the following?"
+    echo
+    find . -name "*.$suffix"
+    echo
+    read -p "Continue (y/n)? " choice
+    echo
+    case "$choice" in 
+      y|Y ) find . -name "*.$suffix" -exec rm {} ';' && echo "Done." ;;
+      n|N ) echo "Pulling out.";;
+      * ) echo "ffs.";;
+    esac
+fi
