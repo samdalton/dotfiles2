@@ -6,9 +6,9 @@
     s = status
     b = checkout -b
 [user]
-	name = Joey Hobbs
-	email = me@joey.co.nz
+	name = Sam Dalton
+	email = mail@samdalton.co.nz
 [github]
-    user = jhob
+    user = samdalton
 [color]
 	ui = auto

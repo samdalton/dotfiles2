@@ -1,4 +1,4 @@
-# hobbs copies holman doing dotfiles
+# sam copies hobbs copies holman doing dotfiles
 
 you might want to [read the original post on the
 subject](http://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/).
