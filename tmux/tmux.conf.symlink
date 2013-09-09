@@ -3,6 +3,7 @@ set-option -g default-command "reattach-to-user-namespace -l bash"
 
 # remap leader key
 set-option -g prefix C-a
+bind-key C-a last-window
 bind-key a send-prefix
 
 setw -g mode-keys vi
@@ -15,10 +16,14 @@ bind h select-pane -L
 bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
-bind K resize-pane -U 2
-bind J resize-pane -D 2
-bind H resize-pane -L 2
-bind L resize-pane -R 2
+
+bind -r H resize-pane -L 5 
+bind -r J resize-pane -D 5 
+bind -r K resize-pane -U 5 
+bind -r L resize-pane -R 5
+
+bind -t vi-copy 'v' begin-selection 
+bind -t vi-copy 'y' copy-selection
 
 setw -g aggressive-resize on
 set -g default-terminal "screen-256color"

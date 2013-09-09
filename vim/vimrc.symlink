@@ -89,6 +89,7 @@ nnoremap <leader>r :%s/
 nnoremap <leader>n  <C-w>s<C-w>l :enew<CR>
 nnoremap <leader>c :Scratch<CR>
 inoremap jj <ESC>
+nnoremap <leader>rt :!ctags -R --exclude=.git --exclude=log *<CR><CR>
 
 "Keymappings
 :nmap H 0

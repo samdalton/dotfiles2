@@ -7,6 +7,10 @@ fi
 export EDITOR='vim'
 export TERM=screen-256color
 
+# Rails defaults
+export RAILS_ENV=development
+export RACK_ENV=development
+
 # set file/folder default permissions to rxwrxwr-x
 umask 002
 
@@ -19,6 +23,7 @@ alias curlt="curl -w \"\n\n-----------\n\ntime_namelookup:  %{time_namelookup}\n
 
 # fix term when sshing from within tmux
 alias ssh='TERM=xterm ssh -o SendEnv=TERM'
+alias tmux="TERM=screen-256color-bce tmux"
 
 # gimme colors
 export CLICOLOR=true
@@ -36,6 +41,12 @@ export PATH="$HOME/.dotfiles/bin":$PATH
 # Add rbenv support
 export PATH="$HOME/.rbenv/bin":"$HOME/.rbenv/shims":$PATH
 
+# Ensure  usr local bin is first
+export PATH=/usr/local/bin:$PATH
+
+# Autocomplete known_hosts
+complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
+
 # goodbye
 alias l8rz=exit
 
@@ -43,21 +54,29 @@ alias l8rz=exit
 alias cpd='pwd | pbcopy'
 alias pd='cd `pbpaste`'
 alias c='clear'
+alias ports='sudo lsof -nP | grep LISTEN'
+alias pubkey='cat ~/.ssh/sam.identity.pub | pbcopy'
+alias please='sudo !!'
+alias ll='ls -lah'
+alias ssh='TERM=xterm ssh -o SendEnv=TERM'
+alias jsoncat='python -m json.tool'
 
 # git
+alias gs='git status -s'
 alias s='git status -s'
 alias d='git diff'
-alias ga='git add'
-alias gaa='git add .'
-alias gaaa='git add --all .'
-alias gcm='git commit -m'
+alias gl='git l'
+alias gc='git commit -am '
+alias go='git checkout '
+alias gb='git checkout -b '
 alias gd='git checkout develop'
 alias gm='git checkout master'
-alias gf='get fetch'
+alias ga='git add'
+alias gaa='git add .'
+alias gaaa='git add -A .'
+alias gcm='git commit -m'
+alias gca='git commit --amend'
+alias gf='git fetch'
 alias gff='git merge --ff-only'
 alias grb='git rebase'
-alias gs='git status -s'
-alias gc='git commit -am '
-alias gca='git commit --amend'
 
-export PATH=/usr/local/bin:/Users/samdalton/.rbenv/bin:/Users/samdalton/.rbenv/shims:/Users/samdalton/.dotfiles/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/samdalton/.dotfiles/bin
