@@ -82,7 +82,9 @@ nnoremap <leader>s <C-w>s<C-w>l
 nnoremap gt :NERDTreeToggle<CR><CR>
 nnoremap <leader>w :set wrap<CR>
 nnoremap <leader>nw :set nowrap<CR>
-nnoremap <leader>p :CtrlP<CR>
+nnoremap <leader>p :CommandT<CR>
+nnoremap <C-p> :CommandT<CR>
+nnoremap <leader>t :TagbarToggle<CR>
 nnoremap <leader>. :set autochdir<CR>:pwd <CR>
 nnoremap <leader>/ :set noautochdir<CR>:pwd <CR>
 nnoremap <leader>r :%s/
@@ -178,7 +180,7 @@ endif
 colorscheme solarized 
 set t_Co=256 " set 256 colors
 set background=light
-let g:solarized_style="dark"
+let g:solarized_style="light"
 function! ToggleBackground()
     if (g:solarized_style=="dark")
         let g:solarized_style="light"
