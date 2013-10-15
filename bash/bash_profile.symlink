@@ -80,3 +80,6 @@ alias gf='git fetch'
 alias gff='git merge --ff-only'
 alias grb='git rebase'
 
+# stash
+alias pmtpr='stash pull-request master @joey\ hobbs @ryan @tammy @rich\ williams @tim\ heath'
+
