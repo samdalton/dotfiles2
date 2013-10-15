@@ -11,6 +11,9 @@ export TERM=screen-256color
 export RAILS_ENV=development
 export RACK_ENV=development
 
+# Vagrant support
+export VM_DEVELOP=true
+
 # set file/folder default permissions to rxwrxwr-x
 umask 002
 
