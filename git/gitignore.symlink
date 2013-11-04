@@ -5,3 +5,5 @@
 *.swp
 *.rbc
 *.orig
+db/structure.sql
+db/structure.sql
