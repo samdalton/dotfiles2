@@ -79,11 +79,12 @@ alias gff='git merge --ff-only'
 alias grb='git rebase'
 
 # stash
-alias pmtpr='git push origin $(parse_git_branch); stash pull-request master @joey\ hobbs @ryan @tammy @rich\ williams @tim\ heath'
+alias pmtpr='git push origin $(parse_git_branch); stash pull-request master @joey\ hobbs @ryan @tammy @dgathright @gtitus'
 
 # Vagrant
 export VM_DEVELOP=true
 alias pmtssh='cd ~/Development/cookbooks/app-pmt && TERM=xterm vagrant ssh'
+alias questssh='cd ~/Development/cookbooks/app-quest && TERM=xterm vagrant ssh'
 
 # source bashrc if exists. put machine specific overrides in this file
 if [ -f ~/.bashrc ] ; then 
