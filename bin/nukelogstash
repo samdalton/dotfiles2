@@ -1,0 +1,7 @@
+#!/bin/bash
+
+suffix=${1:-orig}
+have_files=`find . -name "*.${suffix}" | wc -l`
+
+indices=`curl -XGET -s http://local.logstash.quidweb.int.quid.com:9200/_aliases | jq 'keys[]' | sed s/\"//g`
+for idx in $indices; do echo $idx && curl -XDELETE http://local.logstash.quidweb.int.quid.com:9200/$idx; done

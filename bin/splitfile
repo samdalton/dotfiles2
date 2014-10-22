@@ -1,0 +1,8 @@
+#! /bin/bash
+i=1
+while [ $i -le `wc -l $1 | gawk '{print $1}'` ]
+do     
+    line=`head -$i $1 | tail -1`
+    echo $line > ${i}.json
+    i=`expr $i + 1`
+done

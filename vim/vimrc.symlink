@@ -2,7 +2,7 @@ set nocompatible
 
 call pathogen#infect()
 "set runtimepath^=~/.vim/bundle/ctrlp.vim
-set wildignore+=*/tmp*,*.swp,*.zip,*.html,coverage/*
+set wildignore+=*/tmp*,*.swp,*.zip,*.html,coverage/*,public/*,node_modules/*
 
 filetype on
 filetype indent on
@@ -45,11 +45,13 @@ set smartcase
 set incsearch
 set showmatch
 set hlsearch
-nnoremap / /\v
-vnoremap / /\v
+nnoremap / /\v\c
+vnoremap / /\v\c
 nnoremap <tab> %
 vnoremap <tab> %
 let g:ctrlp_clear_cache_on_exit = 0
+nnoremap /na /\v[^\x00-\x7F]<CR>
+let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " Visual 
 set showmatch  " Show matching brackets. 
@@ -179,8 +181,8 @@ function! DoWindowSwap()
     exe 'hide buf' markedBuf 
 endfunction
 
-nmap <silent> <leader>m :call MarkWindowSwap()<CR>
-nmap <silent> <leader>p :call DoWindowSwap()<CR>
+nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
+nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
 " generate tags
 nnoremap <leader>rt :!ctags -R --exclude=.git --exclude=log *<CR><CR>

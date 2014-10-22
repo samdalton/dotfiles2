@@ -30,6 +30,10 @@ parse_git_branch() {
 }
 export PS1="\w\[\e[0;32;49m\]\$(parse_git_branch)\[\e[0;0m\]> "
 
+if [ -f git-completion ]; then
+  . git-completion
+fi
+
 # add dotfiles repo's scripts to path
 export PATH="$HOME/.dotfiles/bin":$PATH
 
@@ -58,6 +62,7 @@ alias please='sudo !!'
 alias ll='ls -lah'
 alias ssh='TERM=xterm ssh -o SendEnv=TERM'
 alias jsoncat='python -m json.tool'
+alias pmtcurl='curl -s -u sam@quid.com:quidbot123'
 
 # git
 alias gs='git status -s'
@@ -77,14 +82,15 @@ alias gca='git commit --amend'
 alias gf='git fetch'
 alias gff='git merge --ff-only'
 alias grb='git rebase'
+alias gsync='gf;gff origin/master'
 
 # stash
-alias pmtpr='git push origin $(parse_git_branch); stash pull-request master @joey\ hobbs @ryan @tammy @dgathright @gtitus'
+alias pmtpr='git push origin $(parse_git_branch); stash pull-request master @joey\ hobbs @dgathright @gtitus @rcorral @smirea'
 
 # Vagrant
 export VM_DEVELOP=true
-alias pmtssh='cd ~/Development/cookbooks/app-pmt && TERM=xterm vagrant ssh'
-alias questssh='cd ~/Development/cookbooks/app-quest && TERM=xterm vagrant ssh'
+alias pmtssh='cd ~/Development/cookbooks/service_quidweb && TERM=xterm vagrant ssh quidweb'
+alias questssh='cd ~/Development/cookbooks/service_quest && TERM=xterm vagrant ssh quest'
 
 # source bashrc if exists. put machine specific overrides in this file
 if [ -f ~/.bashrc ] ; then 
