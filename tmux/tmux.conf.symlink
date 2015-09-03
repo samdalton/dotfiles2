@@ -47,3 +47,6 @@ set -g status-justify centre
 set -g status-right "#(date)"
 set -g window-status-format "#[fg=white,bg=colour234] #I #W "
 set -g window-status-current-format "#[fg=colour234,bg=colour39]⮀#[fg=white,bg=colour39,noreverse,bold] #I ⮁ #W #[fg=colour39,bg=colour234,nobold]⮀"
+
+run-shell /Users/sam/Development/tmux-resurrect/resurrect.tmux
+set -g @resurrect-save-bash-history 'on'

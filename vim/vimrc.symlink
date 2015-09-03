@@ -1,7 +1,6 @@
 set nocompatible
 
 call pathogen#infect()
-"set runtimepath^=~/.vim/bundle/ctrlp.vim
 set wildignore+=*/tmp*,*.swp,*.zip,*.html,coverage/*,public/*,node_modules/*
 
 filetype on
@@ -20,10 +19,10 @@ set nonumber
 set wrap
 set timeoutlen=250  " Time to wait after ESC (default causes an annoying delay)       
 set mouse=a
-set tabstop=4
-set softtabstop=4
+set tabstop=2
+set softtabstop=2
 set backspace=2  " Backspace over everything in insert mode 
-set shiftwidth=4  " Tabs under smart indent 
+set shiftwidth=2  " Tabs under smart indent 
 set smarttab 
 set expandtab 
 set cindent 
@@ -50,7 +49,6 @@ vnoremap / /\v\c
 nnoremap <tab> %
 vnoremap <tab> %
 let g:ctrlp_clear_cache_on_exit = 0
-nnoremap /na /\v[^\x00-\x7F]<CR>
 let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " Visual 
@@ -75,24 +73,43 @@ nnoremap <leader>rv :source $MYVIMRC<cr>
 " Custom leader commands
 nnoremap <leader><space> :noh<CR>
 nnoremap <leader>gb :!git blame %<CR>
-nnoremap <leader>a :Ack
 nnoremap <leader>j :tabprevious<CR>
 nnoremap <leader>k :tabnext<CR>
 nnoremap <leader>nt :tabnew<CR>
 nnoremap <leader>v <C-w>v<C-w>l
 nnoremap <leader>s <C-w>s<C-w>l
 nnoremap gt :NERDTreeToggle<CR><CR>
+nnoremap <leader>f :NERDTreeFind<CR>
 nnoremap <leader>w :set wrap<CR>
 nnoremap <leader>nw :set nowrap<CR>
 nnoremap <leader>p :CommandT<CR>
-nnoremap <C-p> :CommandT<CR>
-nnoremap <leader>. :set autochdir<CR>:pwd <CR>
-nnoremap <leader>/ :set noautochdir<CR>:pwd <CR>
 nnoremap <leader>r :%s/
 nnoremap <leader>n  <C-w>s<C-w>l :enew<CR>
 nnoremap <leader>c :Scratch<CR>
 inoremap jj <ESC>
 nnoremap <leader>rt :!ctags -R --exclude=.git --exclude=log *<CR><CR>
+nnoremap <leader>na /\v[^\x00-\x7F]<CR>
+
+"Unite
+let g:unite_source_history_yank_enable = 1
+let g:unite_source_rec_async_command= 'ag --nocolor --nogroup -g ""'
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts = '--line-numbers --nocolor --nogroup --hidden'
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+nnoremap <C-p> :<C-u>Unite -buffer-name=files -start-insert file_rec/async:!<cr>
+nnoremap <C-b> :<C-u>Unite -buffer-name=mru -start-insert file_mru<cr>
+nnoremap <C-o> :<C-u>Unite  -buffer-name=outline outline<cr>
+nnoremap <leader>a :Unite grep:.<CR>
+
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  " Play nice with supertab
+  let b:SuperTabDisabled=1
+  " Enable navigation with control-j and control-k in insert mode
+  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+endfunction
 
 "Keymappings
 :nmap H 0

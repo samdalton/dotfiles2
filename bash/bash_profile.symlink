@@ -62,7 +62,6 @@ alias please='sudo !!'
 alias ll='ls -lah'
 alias ssh='TERM=xterm ssh -o SendEnv=TERM'
 alias jsoncat='python -m json.tool'
-alias pmtcurl='curl -s -u sam@quid.com:quidbot123'
 
 # git
 alias gs='git status -s'
@@ -83,16 +82,20 @@ alias gf='git fetch'
 alias gff='git merge --ff-only'
 alias grb='git rebase'
 alias gsync='gf;gff origin/master'
-
-# stash
-alias pmtpr='git push origin $(parse_git_branch); stash pull-request master @joey\ hobbs @dgathright @gtitus @rcorral @smirea'
-
-# Vagrant
-export VM_DEVELOP=true
-alias pmtssh='cd ~/Development/cookbooks/service_quidweb && TERM=xterm vagrant ssh quidweb'
-alias questssh='cd ~/Development/cookbooks/service_quest && TERM=xterm vagrant ssh quest'
+alias gl='git log --graph --abbrev-commit --pretty=oneline'
 
 # source bashrc if exists. put machine specific overrides in this file
 if [ -f ~/.bashrc ] ; then 
     source ~/.bashrc
 fi
+
+# Docker setup
+eval "$(docker-machine env aboutlife-docker)"
+export LIFELINE_URL="http://$(docker-machine ip aboutlife-docker):5000/api"
+alias lifelineup='docker-compose -f docker/docker-compose.yml up'
+alias webup='DISABLE_SOCIAL_BUTTONS=true KEYS=key-changes.js npm start'
+alias webtest='KEYS=key-changes.js npm run-script test-cached'
+alias cleanup_docker='docker rmi $(docker images -f dangling=true -q)'
+
+HISTCONTROL=ignoreboth
+HISTFILE="${HOME}/.history/$(date -u +%Y/%m/%d.%H.%M.%S)_${HOSTNAME_SHORT}_$$"
