@@ -15,6 +15,7 @@ alias copyfromtmux="tmux saveb -|pbcopy && tmux deleteb"
 alias remapcapslock="/Applications/Sikuli-IDE.app/sikuli-ide.sh -r $HOME/Development/set_capslock_to_control.sikuli"
 alias curli="curl -w \"\n\n------\n\nResponse code: %{http_code}\n\n\""
 alias curlt="curl -w \"\n\n-----------\n\ntime_namelookup:  %{time_namelookup}\ntime_connect:  %{time_connect}\ntime_appconnect:  %{time_appconnect}\ntime_pretransfer:  %{time_pretransfer}\ntime_redirect:  %{time_redirect}\ntime_starttransfer:  %{time_starttransfer}\n----------\ntime_total:  %{time_total}\n\n\""
+alias resource=". ~/.bash_profile"
 
 # fix term when sshing from within tmux
 alias ssh='TERM=xterm ssh -o SendEnv=TERM'
@@ -93,9 +94,11 @@ fi
 eval "$(docker-machine env aboutlife-docker)"
 export LIFELINE_URL="http://$(docker-machine ip aboutlife-docker):5000/api"
 alias lifelineup='docker-compose -f docker/docker-compose.yml up'
-alias webup='DISABLE_SOCIAL_BUTTONS=true KEYS=key-changes.js npm start'
-alias webtest='KEYS=key-changes.js npm run-script test-cached'
+alias webup='LOG_ANALYTICS=1 LIFELINE_CACHE_TYPE=memcache MEMCACHED_HOSTS=localhost:11211 KEYS=key-changes.js npm start'
+alias webtest='LIFELINE_CACHE_TYPE=memcache MEMCACHED_HOSTS=localhost:11211 KEYS=key-changes.js npm run-script test'
+alias webtest-nocache='DISABLE_LIFELINE_CACHE=1 KEYS=key-changes.js npm run-script test'
 alias cleanup_docker='docker rmi $(docker images -f dangling=true -q)'
-
-HISTCONTROL=ignoreboth
-HISTFILE="${HOME}/.history/$(date -u +%Y/%m/%d.%H.%M.%S)_${HOSTNAME_SHORT}_$$"
+alias mongoup='docker run -p 27017:27017 library/mongo'
+alias pgup='docker run -p 5433:5432 -e POSTGRES_PASSWORD="postgres" library/postgres'
+alias pgshell="docker run -it --link hungry_sammet:postgres --rm postgres sh -c 'exec psql -h \"$POSTGRES_PORT_5432_TCP_ADDR\" -p \"$POSTGRES_PORT_5432_TCP_PORT\" -U postgres' -P"
+alias bouncebt="blueutil power 0; blueutil power 1"

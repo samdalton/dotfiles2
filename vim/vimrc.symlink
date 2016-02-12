@@ -100,6 +100,7 @@ nnoremap <C-p> :<C-u>Unite -buffer-name=files -start-insert file_rec/async:!<cr>
 nnoremap <C-b> :<C-u>Unite -buffer-name=mru -start-insert file_mru<cr>
 nnoremap <C-o> :<C-u>Unite  -buffer-name=outline outline<cr>
 nnoremap <leader>a :Unite grep:.<CR>
+nnoremap <leader>u :UniteResume<CR>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
