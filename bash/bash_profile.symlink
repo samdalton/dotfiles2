@@ -102,3 +102,5 @@ alias mongoup='docker run -p 27017:27017 library/mongo'
 alias pgup='docker run -p 5433:5432 -e POSTGRES_PASSWORD="postgres" library/postgres'
 alias pgshell="docker run -it --link hungry_sammet:postgres --rm postgres sh -c 'exec psql -h \"$POSTGRES_PORT_5432_TCP_ADDR\" -p \"$POSTGRES_PORT_5432_TCP_PORT\" -U postgres' -P"
 alias bouncebt="blueutil power 0; blueutil power 1"
+alias testf="KEYS=key-changes.js npm run mocha -- "
+alias ssha='eval $(ssh-agent);ssh-add'
