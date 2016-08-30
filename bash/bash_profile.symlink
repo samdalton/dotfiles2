@@ -99,5 +99,11 @@ alias ssha='eval $(ssh-agent);ssh-add'
 is_vagrant_stopped() {
     vagrant status | ag suspended 2>&1 > /dev/null;
 }
-alias vm="cd /Users/samdalton/dev/dev-vagrant/vmware; if is_vagrant_stopped; then vagrant resume && vagrant ssh; else vagrant ssh; fi
- "
+alias vm="cd /Users/samdalton/dev/dev-vagrant/vmware; if is_vagrant_stopped; then vagrant resume && vagrant ssh; else vagrant ssh; fi"
+
+
+ # custom starting directory
+cd /srv/nerdwallet
+
+export NVM_DIR="/Users/samdalton/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

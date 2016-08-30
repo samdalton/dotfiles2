@@ -1,0 +1,84 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd /srv/nerdwallet/diy-tools-retirement
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +4 client/config/control-panel-view-config.js
+badd +1 client/config/data/inputs.js
+badd +23 client/config/data/validations.js
+badd +78 client/routes/results.jsx
+badd +1 client/routes/index.jsx
+badd +13 client/reducers/actions.js
+badd +1 client/reducers/results.js
+badd +2 client/reducers/loading.js
+badd +1 client/components/loading-animation/loading-animation.jsx
+argglobal
+silent! argdel *
+edit client/components/loading-animation/loading-animation.jsx
+set splitbelow splitright
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+exe '1resize ' . ((&lines * 26 + 27) / 54)
+exe '2resize ' . ((&lines * 25 + 27) / 54)
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 24 - ((17 * winheight(0) + 13) / 26)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+24
+normal! 078|
+wincmd w
+argglobal
+edit client/routes/results.jsx
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 123 - ((3 * winheight(0) + 12) / 25)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+123
+normal! 09|
+wincmd w
+exe '1resize ' . ((&lines * 26 + 27) / 54)
+exe '2resize ' . ((&lines * 25 + 27) / 54)
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToO
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :
