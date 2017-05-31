@@ -6,4 +6,5 @@
 *.rbc
 *.orig
 db/structure.sql
+*.pyc
 db/structure.sql
